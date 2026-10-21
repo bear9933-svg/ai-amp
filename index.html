@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070d1b">
+<title>AI 帝國圖鑑｜互動戰略世界地圖</title>
+<style>
+:root{--bg:#070d1b;--gold:#e8bd5a;--gold2:#ffe7a1;--ink:#dce8fb;--muted:#94a7c5;--panel:#101a2b;--blue:#68c9ff;--red:#ff8e9d;--green:#6be0c1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% 0,#182747 0,transparent 55%),var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
+button,input{font:inherit}.shell{width:min(1500px,100%);margin:auto;padding:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:10px;font-size:.82rem;letter-spacing:.18em;color:#b6c6df}.brand-mark{width:30px;height:30px;border:1px solid var(--gold);transform:rotate(45deg);display:grid;place-items:center;color:var(--gold)}.brand-mark span{transform:rotate(-45deg);font-size:16px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #344765;background:#101b2e;color:#dce8fb;border-radius:9px;padding:9px 13px;cursor:pointer}.btn:hover{border-color:var(--gold);color:var(--gold2)}
+.hero{text-align:center;padding:12px 0 22px}.eyebrow{font-size:.72rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase}.hero h1{font-family:"Noto Serif TC",Georgia,serif;font-size:clamp(2rem,4.5vw,4rem);letter-spacing:.12em;margin:10px 0 8px;color:#fff0c6;text-shadow:0 0 30px #e8bd5a35}.hero p{margin:0 auto;color:var(--muted);max-width:740px;font-size:.95rem}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.stat{border:1px solid #394761;background:#0b1425c9;padding:7px 13px;border-radius:999px;color:#c3d1e7;font-size:.78rem}.stat b{color:var(--gold2);margin-right:5px}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 auto 14px;max-width:1250px;flex-wrap:wrap}.search{flex:1;min-width:230px;max-width:420px}.search input{width:100%;background:#0d1728;border:1px solid #33445e;border-radius:10px;padding:11px 14px;color:white;outline:none}.search input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #e8bd5a18}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{font-size:.82rem;padding:9px 12px;border-radius:9px;border:1px solid #34445e;background:#101a2a;color:#b7c7df;cursor:pointer}.filter[aria-pressed=true]{background:#3b3020;border-color:var(--gold);color:#ffe7a1}
+.map-frame{position:relative;max-width:1350px;margin:auto;border:1px solid #b78b3c;border-radius:8px;padding:7px;background:linear-gradient(135deg,#c59a4a,#f4d98b 30%,#6e5125 70%,#d8b660);box-shadow:0 18px 60px #0009,0 0 35px #d7aa4b12}
+.map{position:relative;min-height:650px;overflow:hidden;border:1px solid #101b2c;background:radial-gradient(ellipse at 49% 47%,#28364d 0,#1b2940 42%,#0b1425 100%)}
+.map::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.8%,#c9d9ed13 50%,transparent 50.2%),linear-gradient(transparent 49.8%,#c9d9ed13 50%,transparent 50.2%);background-size:80px 80px;opacity:.25;pointer-events:none}
+.map-art{position:absolute;inset:0;width:100%;height:100%;opacity:.95;pointer-events:none}
+.map-title{position:absolute;z-index:5;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:7px 24px 9px;background:#0a1224eF;border:2px solid var(--gold);box-shadow:0 0 0 4px #080f1b88,0 5px 20px #0008;font-family:"Noto Serif TC",Georgia,serif;font-size:clamp(1rem,2.3vw,1.6rem);letter-spacing:.13em;color:#fff0c9}
+.map-title strong{font-size:1.5em;color:var(--gold);margin-right:8px}
+.compass{position:absolute;right:5%;top:8%;width:66px;height:66px;opacity:.7}
+.map-caption{position:absolute;left:22px;bottom:17px;color:#8194b1;font-size:.68rem;letter-spacing:.18em;z-index:2}
+.region-label{position:absolute;color:#8fa3c0;font-size:.7rem;letter-spacing:.25em;opacity:.8;z-index:1}.label-west{top:23%;left:15%}.label-east{top:23%;right:14%}.label-isles{bottom:16%;left:50%;transform:translateX(-50%)}
+.node{position:absolute;z-index:3;transform:translate(-50%,-50%);width:70px;min-height:75px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:0;color:white;cursor:pointer;padding:0 2px;text-align:center;transition:transform .2s,filter .2s}
+.node:hover,.node:focus-visible,.node[aria-pressed=true]{transform:translate(-50%,-50%) scale(1.13);z-index:8;filter:drop-shadow(0 0 10px #f4ce70a8);outline:none}
+.node[aria-pressed=true] .orb{border-color:#fff0a8;box-shadow:0 0 0 3px #e8bd5a36,0 0 23px #e8bd5a8a}
+.orb{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;font-size:1.25rem;color:#12203a;background:radial-gradient(circle at 35% 28%,#fff 0,#f5f5e9 45%,#b9c7d9 100%);border:2px solid #d9b960;box-shadow:0 0 0 4px #9bc4d31a,0 0 17px #80d6ff30,inset 0 0 0 2px #ffffffb5;transition:all .2s}
+.node.west .orb{border-color:#e5c36c}.node.china .orb{border-color:#76d6d3;box-shadow:0 0 0 4px #76d6d322,0 0 18px #76d6d330}.node.other .orb{border-color:#c2a5f8;box-shadow:0 0 0 4px #c2a5f822,0 0 18px #c2a5f830}
+.node .name{font-size:.68rem;line-height:1.15;font-weight:700;text-shadow:0 2px 5px #000;max-width:95px;white-space:normal}
+.node .mini{font-size:.56rem;color:#9eb2cf;white-space:nowrap;text-shadow:0 1px 4px #000}
+.island{position:absolute;border:1px solid #526484;background:#1c2941;box-shadow:inset 0 0 15px #7184a522;z-index:1;transform:rotate(-8deg);border-radius:43% 57% 58% 42%/55% 38% 62% 45%}
+.island:after{content:"";position:absolute;inset:7px;border:1px solid #536580;border-radius:inherit;opacity:.55}
+.i1{width:100px;height:65px;left:7%;top:48%}.i2{width:125px;height:75px;left:16%;bottom:5%}.i3{width:100px;height:62px;right:8%;bottom:7%}.i4{width:80px;height:52px;right:20%;top:11%}.i5{width:76px;height:50px;left:4%;top:18%}
+.sea-star{position:absolute;color:#d8b55b;font-size:15px;text-shadow:0 0 9px #f4d78b;opacity:.8}
+.detail{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid #3b4b65;border-radius:13px;background:linear-gradient(125deg,#121e32,#0b1423);max-width:1250px;margin:18px auto 0;overflow:hidden;box-shadow:0 16px 38px #0005}
+.detail-main{padding:24px;border-right:1px solid #34435b}.detail-side{padding:24px}.detail-head{display:flex;gap:15px;align-items:center}.detail-emblem{width:62px;height:62px;flex:none;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,#fff 0,#d5e0ed 60%,#667c9c 100%);border:2px solid var(--gold);font-size:1.8rem;color:#122039;box-shadow:0 0 20px #e8bd5a20}.detail-kicker{font-size:.7rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}.detail h2{margin:3px 0;font-size:1.65rem;color:#fff0c9}.detail-focus{color:#9fb2ce;font-size:.85rem}.detail-summary{color:#c7d5e9;margin:18px 0 0;line-height:1.8}.detail-side h3{margin:0 0 12px;font-size:.9rem;color:var(--gold2);letter-spacing:.08em}.info-row{padding:10px 0;border-top:1px solid #2b3a51}.info-row:first-of-type{border-top:0}.info-row label{display:block;color:#8fa3bf;font-size:.73rem;margin-bottom:4px}.info-row p{margin:0;font-size:.9rem;line-height:1.65}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.tag{font-size:.7rem;border:1px solid #3b4b63;background:#19263a;color:#bfcfe5;border-radius:6px;padding:4px 8px}
+.footer{max-width:1250px;margin:20px auto 8px;display:flex;justify-content:space-between;gap:20px;color:#7487a4;font-size:.74rem}.footer a{color:#b6c9e5}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;background:#1c2b40;border:1px solid var(--gold);padding:10px 16px;border-radius:10px;color:#fff0c9;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:850px){.shell{padding:12px}.map{min-height:610px}.node{width:64px}.orb{width:38px;height:38px}.node .name{font-size:.62rem}.detail{grid-template-columns:1fr}.detail-main{border-right:0;border-bottom:1px solid #34435b}.footer{display:block}.footer p{margin:6px 0}}
+@media(max-width:560px){.topbar{align-items:flex-start}.brand{letter-spacing:.08em}.top-actions .btn{padding:7px 9px;font-size:.75rem}.hero{padding-top:4px}.hero h1{letter-spacing:.05em}.map-frame{padding:4px}.map{min-height:580px}.map-title{top:13px;padding:6px 12px;letter-spacing:.06em}.node{width:56px;min-height:65px}.orb{width:32px;height:32px;font-size:1rem}.node .name{font-size:.55rem}.node .mini{font-size:.48rem}.compass{width:44px;height:44px;right:4%;top:9%}.label-west{left:7%;top:18%}.label-east{right:5%;top:18%}.detail-main,.detail-side{padding:18px}.detail h2{font-size:1.35rem}.stats{gap:6px}.stat{font-size:.7rem}.controls{align-items:stretch}.search{max-width:none}.filters{justify-content:space-between}.filter{flex:1;padding:8px 6px;font-size:.73rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+ <div class="brand"><span class="brand-mark"><span>✦</span></span><span>AI EMPIRE ATLAS</span></div>
+ <div class="top-actions"><button class="btn" id="copySummary">複製企業資料</button><button class="btn" id="reset">重設地圖</button></div>
+</header>
+<section class="hero">
+ <div class="eyebrow">The Global Artificial Intelligence Landscape</div>
+ <h1>AI 帝國・戰略世界地圖</h1>
+ <p>探索全球人工智慧勢力版圖。點選地圖上的徽章，解鎖各家企業的模型、技術路線與商業定位。</p>
+ <div class="stats"><span class="stat"><b id="visibleCount">21</b>家代表性企業</span><span class="stat"><b>03</b>大勢力分區</span><span class="stat"><b>01</b>張互動地圖</span></div>
+</section>
+<section class="controls" aria-label="搜尋及篩選">
+ <label class="search"><input id="search" type="search" placeholder="搜尋企業、模型或技術關鍵字…" aria-label="搜尋企業、模型或技術關鍵字"></label>
+ <div class="filters" role="group" aria-label="企業分類">
+  <button class="filter" data-group="all" aria-pressed="true">全部勢力</button>
+  <button class="filter" data-group="west" aria-pressed="false">美國／西方</button>
+  <button class="filter" data-group="china" aria-pressed="false">中國勢力</button>
+  <button class="filter" data-group="other" aria-pressed="false">其他地區</button>
+ </div>
+</section>
+<main>
+<div class="map-frame">
+ <section class="map" id="map" aria-label="AI 帝國互動世界地圖">
+  <svg class="map-art" viewBox="0 0 1200 650" preserveAspectRatio="none" aria-hidden="true">
+   <defs>
+    <linearGradient id="land" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#344158"/><stop offset="1" stop-color="#18253b"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+   </defs>
+   <path d="M205 155 Q230 115 295 128 L340 98 Q385 93 420 116 L480 101 Q520 119 560 104 L612 130 Q663 110 706 132 L760 116 Q816 126 845 160 L920 180 Q960 202 946 245 L1000 280 Q1040 315 1004 351 L970 386 Q986 420 943 443 L882 455 Q835 493 771 480 L723 522 Q676 551 633 510 L589 484 Q553 510 509 523 L440 515 Q405 494 360 500 L305 464 Q254 462 235 425 L202 395 Q183 355 204 324 L187 285 Q204 249 229 230 L210 196 Z" fill="url(#land)" stroke="#d4aa52" stroke-width="2.3" filter="url(#glow)" opacity=".95"/>
+   <g fill="none" stroke="#91a1bb" stroke-width="1.3" opacity=".6">
+    <path d="M300 130 L325 196 L294 244 L335 286 L303 333 L360 378 L345 494"/>
+    <path d="M420 116 L405 170 L449 205 L427 249 L462 290 L438 340 L480 390 L463 507"/>
+    <path d="M560 104 L548 158 L582 205 L550 251 L590 295 L566 342 L610 393 L589 484"/>
+    <path d="M706 132 L688 180 L728 218 L700 258 L742 300 L711 342 L756 386 L771 480"/>
+    <path d="M845 160 L810 203 L844 244 L815 287 L855 324 L828 367 L882 455"/>
+    <path d="M205 250 L286 260 L335 286 L405 275 L462 290 L520 268 L590 295 L650 278 L700 258 L770 273 L815 287 L895 274 L1000 280"/>
+    <path d="M202 395 L285 380 L360 378 L430 400 L480 390 L540 415 L610 393 L670 418 L756 386 L828 367 L943 386"/>
+    <path d="M530 178 L555 210 L578 180 L605 218 L628 190 L655 225 L681 198"/>
+    <path d="M510 230 L538 255 L562 228 L586 265 L611 235 L637 270 L665 241"/>
+   </g>
+   <g fill="none" stroke="#78bfff" stroke-width="2" opacity=".6"><path d="M395 178 C380 250 432 288 420 355 S455 438 438 496"/><path d="M635 185 C670 240 620 300 652 356 S630 440 665 500"/></g>
+   <g transform="translate(600 320)" opacity=".65" stroke="#f0d27e" fill="none"><path d="M-44 13 L0 -35 L44 13 L0 4 Z" stroke-width="2"/><path d="M-28 18 L0 -8 L28 18 M-18 27 L0 9 L18 27" stroke-width="1.5"/><circle r="4" fill="#f0d27e"/></g>
+   <g fill="#f4d47a" filter="url(#glow)"><circle cx="128" cy="250" r="2.4"/><circle cx="180" cy="430" r="2"/><circle cx="365" cy="180" r="2"/><circle cx="500" cy="155" r="2"/><circle cx="735" cy="190" r="2"/><circle cx="1030" cy="390" r="2.4"/><circle cx="900" cy="490" r="2"/></g>
+  </svg>
+  <div class="map-title"><strong>21</strong> 家 AI 帝國</div>
+  <svg class="compass" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="36" fill="none" stroke="#b69b58" stroke-width="1.5"/><circle cx="50" cy="50" r="25" fill="none" stroke="#7b8da8" stroke-width="1"/><path d="M50 8 L56 50 L50 92 L44 50 Z" fill="#caa653"/><path d="M8 50 L50 44 L92 50 L50 56 Z" fill="#7e91ac" opacity=".7"/><circle cx="50" cy="50" r="4" fill="#f4dfa0"/></svg>
+  <div class="region-label label-west">WESTERN REALM</div><div class="region-label label-east">EASTERN REALM</div><div class="region-label label-isles">THE WIDER ECOSYSTEM</div>
+  <div class="island i1"></div><div class="island i2"></div><div class="island i3"></div><div class="island i4"></div><div class="island i5"></div>
+  <span class="sea-star" style="left:12%;top:35%">✦</span><span class="sea-star" style="left:26%;top:68%">✧</span><span class="sea-star" style="left:76%;top:27%">✦</span><span class="sea-star" style="right:9%;top:60%">✧</span><span class="sea-star" style="left:48%;bottom:8%">✦</span>
+  <div id="nodes"></div>
+  <div class="map-caption">INTERACTIVE ATLAS · SELECT AN EMBLEM TO EXPLORE</div>
+ </section>
+</div>
+<section class="detail" aria-live="polite">
+ <div class="detail-main">
+  <div class="detail-head"><div class="detail-emblem" id="dIcon">✳️</div><div><div class="detail-kicker" id="dCategory">企業檔案</div><h2 id="dName">OpenAI 帝國</h2><div class="detail-focus" id="dFocus">通用 AI、開發者平台與多模態產品</div></div></div>
+  <p class="detail-summary" id="dSummary"></p><div class="tags" id="dTags"></div>
+ </div>
+ <div class="detail-side"><h3>帝國情報 · INTELLIGENCE BRIEF</h3>
+  <div class="info-row"><label>代表產品／模型</label><p id="dProducts"></p></div>
+  <div class="info-row"><label>核心技術與業務方向</label><p id="dDirection"></p></div>
+  <div class="info-row"><label>戰略觀察</label><p id="dNote"></p></div>
+  <div class="info-row"><label>主要人物／創辦團隊</label><p id="dLeaders"></p></div>
+  <div class="info-row"><label>核心技術拆解</label><p id="dTech"></p></div>
+  <div class="info-row"><label>競爭優勢</label><p id="dEdge"></p></div>
+  <div class="info-row"><label>商業模式</label><p id="dBusiness"></p></div>
+  <div class="info-row"><label>實際應用場景</label><p id="dUsecase"></p></div>
+  <div class="info-row"><label>官方資料來源</label><p><a id="dSource" href="#" target="_blank" rel="noopener noreferrer" style="color:#9ecbff;overflow-wrap:anywhere">查看官方網站／公司資料</a></p></div>
+ </div>
+</section>
+</main>
+<footer class="footer"><p>AI EMPIRE ATLAS · 互動式產業認識工具</p><p>企業資料為研究型概覽，人物職務與產品策略可能更新；技術特點屬整理性描述，重大判斷請參考各公司官方公告。<br>原始參考影片：<a href="https://www.youtube.com/watch?v=q_UMRcg-zOw" target="_blank" rel="noopener noreferrer">維維 AI 技術工坊</a></p></footer>
+</div>
+<div class="toast" id="toast" role="status">已複製企業資料</div>
+<script>
+const data=[
+{id:"google",n:"Google DeepMind",icon:"G",g:"west",x:26,y:30,focus:"前沿模型、搜尋與多模態 AI",products:"Gemini；Google AI 產品與研究系統",summary:"結合大型研究團隊、雲端基礎設施與全球產品分發能力，將模型研究推進到大規模應用。",direction:"通用模型、多模態推理、科學研究，以及 AI 與 Google 服務整合。",note:"觀察模型能力如何轉化為搜尋、工作效率、開發工具與雲端服務。",tags:["多模態","研究","雲端平台"],leaders:"Demis Hassabis（德米斯・哈薩比斯）（Google DeepMind 共同創辦人暨執行長）；Jeff Dean（傑夫・迪恩）（Google 資深 AI 技術領導者）",edge:"把前沿研究、Google 搜尋／Workspace／Android 等產品，以及自有雲端與運算資源串成完整生態。",tech:"Gemini 多模態模型、工具使用與推理；模型訓練與推論基礎設施；AI for Science（如蛋白質與科學研究）。",business:"消費者產品、Google Cloud、企業 AI、開發者 API 與廣告／搜尋生態整合。",usecase:"搜尋與摘要、文件協作、程式開發、企業知識助理、科學研究。",source:"https://deepmind.google/about/"},
+{id:"openai",n:"OpenAI",icon:"✳",g:"west",x:38,y:34,focus:"通用 AI、開發者平台與多模態產品",products:"ChatGPT；OpenAI API；多模態模型與工具",summary:"透過面向大眾的產品與 API，讓個人、開發者及企業將生成式 AI 導入日常工作。",direction:"通用模型、推理、多模態互動、開發者平台與 AI 代理工作流程。",note:"評估時可同時看模型能力、工具整合、資料治理、成本與工作流程效益。",tags:["生成式 AI","API","多模態"],leaders:"Sam Altman（山姆・奧特曼）（共同創辦人、執行長）；Greg Brockman（格雷格・布羅克曼）（共同創辦人）；主要研究與產品團隊以官方組織公告為準。",edge:"面向大眾的產品入口、開發者 API、模型能力與工具工作流程整合，讓 AI 容易進入日常工作。",tech:"大型語言模型、推理、多模態理解與生成、語音互動、工具呼叫及代理式工作流程。",business:"ChatGPT 個人／企業方案、API 用量計費、企業部署與合作夥伴生態。",usecase:"客服助理、文件整理、程式開發、內部知識問答、流程自動化原型。",source:"https://openai.com/"},
+{id:"anthropic",n:"Anthropic",icon:"AI",g:"west",x:31,y:47,focus:"可靠性、安全性與企業應用",products:"Claude 系列",summary:"以模型可靠性與安全研究為重要品牌定位，產品常用於寫作、分析、程式開發與知識工作。",direction:"大型語言模型、模型對齊、安全研究與企業工作流程。",note:"比較長文本處理、程式協作、工具使用與企業部署條件。",tags:["語言模型","安全研究","企業應用"],leaders:"Dario Amodei（達里奧・阿莫代伊）（共同創辦人、執行長）；Daniela Amodei（丹妮拉・阿莫代伊）（共同創辦人、總裁）；Jared Kaplan（賈里德・卡普蘭）（共同創辦人、首席科學家）。",edge:"以 Claude、可靠性、安全研究與企業工作流程作為重要定位，重視模型可控性與長文本任務。",tech:"Claude 模型、模型對齊與可解釋性研究、工具使用、程式開發協作及企業級 API。",business:"Claude 訂閱、企業服務、API 與雲端平台合作。",usecase:"程式碼審查、長文件分析、企業知識工作、研究整理與客服輔助。",source:"https://www.anthropic.com/company/leadership"},
+{id:"microsoft",n:"Microsoft",icon:"▦",g:"west",x:43,y:46,focus:"雲端、辦公軟體與企業 AI",products:"Microsoft Copilot；Azure AI；Microsoft 365 AI 功能",summary:"優勢在於把 AI 能力嵌入既有企業軟體、雲端服務與 IT 管理環境。",direction:"雲端運算、企業級 AI 部署、開發者工具與辦公流程整合。",note:"企業導入時可關注權限控管、資料安全、既有系統整合與總持有成本。",tags:["企業 AI","雲端","工作流程"],leaders:"Satya Nadella（薩提亞・納德拉）（董事長暨執行長）；Mustafa Suleyman（穆斯塔法・蘇萊曼）（Microsoft AI 相關業務代表人物；職務以官方公告為準）。",edge:"最強項之一是把 AI 放進企業既有的 Microsoft 365、Azure、Windows、GitHub 與資安管理環境。",tech:"Azure AI、Copilot 產品、模型服務與部署、開發工具、企業身分／權限及資料治理整合。",business:"Azure 雲端用量、企業訂閱、Copilot 加值、GitHub 與商業軟體服務。",usecase:"辦公自動化、企業文件助理、程式開發、資料分析、內部流程串接。",source:"https://www.microsoft.com/en-us/about"},
+{id:"meta",n:"Meta",icon:"∞",g:"west",x:28,y:63,focus:"社群產品、開放模型與個人 AI",products:"Llama 系列；Meta AI 相關功能",summary:"將模型研發與社群平台結合，並透過開放模型策略擴大開發者生態。",direction:"開放模型生態、社群與通訊產品中的 AI，以及大規模 AI 基礎設施。",note:"區分模型授權條款、實際開放程度、部署成本與商用限制。",tags:["開放模型","社群平台","生態系"],leaders:"Mark Zuckerberg（馬克・祖克柏）（創辦人暨執行長）；AI 研究與產品領導團隊會隨組織調整。",edge:"擁有大型社群與消費產品分發管道，並以 Llama 模型生態擴大開發者使用與部署選擇。",tech:"Llama 系列、開放權重模型、多模態研究、推薦系統與社群產品內的 AI 功能。",business:"社群平台廣告與互動、AI 產品帶動使用時間、硬體／穿戴裝置與開發者生態。",usecase:"內容理解與創作、社群客服、個人助理、企業自架模型與研究原型。",source:"https://ai.meta.com/"},
+{id:"xai",n:"xAI",icon:"X",g:"west",x:39,y:66,focus:"Grok、即時資訊與大型運算",products:"Grok 系列",summary:"以 Grok 品牌發展通用 AI，並與 X 平台及其資訊生態有所連結。",direction:"通用模型、推理能力、即時資訊相關應用與大型運算資源。",note:"留意資料來源、即時性、回答可靠度及不同方案的功能差異。",tags:["通用模型","即時資訊","運算"],leaders:"Elon Musk（伊隆・馬斯克）（創辦人）；團隊與管理職務請以 xAI 最新官方資訊為準。",edge:"與 X 平台及大型運算資源有關聯，產品定位重視通用對話、推理及資訊互動。",tech:"Grok 系列模型、推理與工具使用、模型訓練基礎設施及與平台資訊的整合。",business:"Grok 相關訂閱／平台功能、企業與開發者服務；具體方案依官方公告。",usecase:"即時議題研究、內容理解、一般問答、程式輔助與資訊整理。",source:"https://x.ai/"},
+{id:"zhipu",n:"智譜 AI",icon:"Z",g:"china",x:61,y:29,focus:"GLM 系列與企業應用",products:"GLM 系列模型及相關 AI 服務",summary:"以 GLM 模型系列建立品牌，面向開發者、企業及多種 AI 應用情境。",direction:"通用語言模型、多模態能力、企業 API 與模型應用。",note:"留意 API 可用性、模型版本、價格、中文任務表現與部署方式。",tags:["GLM","企業 API","多模態"],leaders:"唐傑（創辦團隊代表人物）；公司治理與現任職務應以智譜官方公告為準。",edge:"以 GLM 模型系列與中文場景為重要基礎，兼顧模型服務、開發者及企業應用。",tech:"GLM 系列、語言與多模態模型、推理能力、模型 API 與企業部署方案。",business:"模型 API、企業解決方案、雲端服務與模型相關產品。",usecase:"中文助理、文件問答、企業知識庫、程式開發與工作流程助手。",source:"https://www.zhipuai.cn/"},
+{id:"baidu",n:"百度",icon:"✿",g:"china",x:58,y:40,focus:"搜尋、雲端與生成式 AI",products:"文心大模型；百度智能雲相關 AI 服務",summary:"從搜尋與雲端基礎延伸至生成式 AI，並把模型能力整合進既有產品與企業服務。",direction:"語言模型、搜尋服務、企業雲端與 AI 應用。",note:"比較時可觀察中文任務能力、雲端部署、工具生態與商業化進度。",tags:["中文模型","搜尋","雲端"],leaders:"李彥宏（共同創辦人、董事長暨執行長）。",edge:"搜尋引擎、中文資訊服務、雲端與自動駕駛等既有技術和業務，提供 AI 產品化入口。",tech:"文心大模型、搜尋與檢索、雲端 AI 平台、語音／影像能力及自動駕駛相關技術。",business:"百度搜尋與產品、智能雲、企業 AI 解決方案及自動駕駛相關服務。",usecase:"中文搜尋問答、企業客服、知識管理、內容生成及交通／車載 AI。",source:"https://ir.baidu.com/corporate-governance/management"},
+{id:"alibaba",n:"阿里巴巴／Qwen",icon:"✧",g:"china",x:69,y:37,focus:"通義千問與開放模型生態",products:"Qwen（通義千問）系列；阿里雲 AI 服務",summary:"將模型研發、開放生態與雲端商業服務相連結，覆蓋開發者與企業使用情境。",direction:"通用模型、開放模型、雲端服務與企業應用。",note:"留意各模型版本的授權條款、上下文能力、部署成本與商用條件。",tags:["Qwen","開放模型","雲端"],leaders:"吳泳銘（阿里巴巴集團 CEO）；Qwen／通義千問研究與業務團隊的負責人可能變動，應查官方最新公告。",edge:"將 Qwen 模型、阿里雲、開發者生態與企業級 AI 服務連接，覆蓋開源／開放模型與雲端部署。",tech:"Qwen 系列、語言與多模態模型、程式能力、模型微調、推理服務及 AI 雲端基礎設施。",business:"阿里雲、模型 API、企業部署、電商／辦公／開發者產品與雲端算力。",usecase:"中文企業助理、程式開發、電商客服、文件處理、企業內部 AI 與本地部署。",source:"https://www.alibabagroup.com/"},
+{id:"moonshot",n:"月之暗面",icon:"☾",g:"china",x:77,y:28,focus:"長文本與知識工作",products:"Kimi 系列",summary:"以 Kimi 品牌切入對長文本、文件閱讀及複雜資訊整理有需求的使用者。",direction:"語言模型、長上下文處理、文件理解與知識工作流程。",note:"實際使用時應測試文件長度限制、引用可追溯性、準確度與方案差異。",tags:["Kimi","長文本","文件分析"],leaders:"楊植麟（創辦人）；其他管理職務與最新產品方向以公司公告為準。",edge:"Kimi 品牌以長文件、長上下文與知識工作場景建立辨識度。",tech:"長上下文語言模型、文件理解、資訊檢索、推理與工具協作。",business:"消費級 AI 助理、模型服務及可能的企業／開發者應用。",usecase:"閱讀長報告、比較多份文件、整理研究資料、長篇內容分析。",source:"https://www.moonshot.cn/"},
+{id:"bytedance",n:"字節跳動",icon:"♪",g:"china",x:67,y:57,focus:"內容創作、推薦與多模態生成",products:"豆包；Seed 系列及相關創作工具",summary:"結合內容平台與消費產品經驗，將 AI 用於對話、創作與多媒體工作流程。",direction:"生成式 AI、影音內容創作、推薦系統與消費級應用。",note:"關注生成品質、商用授權、內容安全及產品可用地區。",tags:["內容創作","影音生成","消費產品"],leaders:"梁汝波（字節跳動 CEO）；張一鳴為創辦人；AI 研究與產品負責人以官方公告為準。",edge:"內容平台、推薦系統與創作工具經驗豐富，能把生成式 AI 導入影音與消費者產品。",tech:"豆包及相關模型、推薦系統、影音／影像生成、語音互動與多模態技術。",business:"內容與廣告生態、AI 助理、創作工具、企業服務及相關雲端／模型服務。",usecase:"短影音創作、廣告素材、語音助理、內容摘要、行銷與客服輔助。",source:"https://www.bytedance.com/"},
+{id:"tencent",n:"騰訊",icon:"🐧",g:"china",x:81,y:46,focus:"社交生態、遊戲與企業服務",products:"混元模型；騰訊元寶及雲端 AI 服務",summary:"可從微信等既有生態、內容場景與企業服務理解其 AI 產品化路線。",direction:"通用模型、社交與內容應用、遊戲、企業服務及雲端。",note:"觀察模型如何整合進既有服務，以及開發者與企業可使用的能力。",tags:["平台生態","遊戲","企業服務"],leaders:"馬化騰（共同創辦人、董事長暨執行長）；湯道生負責雲與智慧產業相關業務。",edge:"微信、遊戲、內容與企業服務等龐大生態，讓 AI 可進入既有社交、娛樂與工作場景。",tech:"混元模型、生成式影像／影音研究、遊戲 AI、雲端模型服務與企業應用。",business:"遊戲與內容、雲端服務、企業數位化、社交平台及 AI 加值功能。",usecase:"企業客服、遊戲內容生成、社交產品助理、文件分析與雲端 AI 導入。",source:"https://www.tencent.com/zh-cn/who-we-are/our-team/"},
+{id:"xiaomi",n:"小米",icon:"mi",g:"china",x:65,y:72,focus:"手機、智慧家庭與端側 AI",products:"小米自研模型與手機／智慧裝置 AI 功能",summary:"其差異化不只在模型，也包括手機、家電與智慧裝置形成的硬體使用場景。",direction:"端側 AI、消費電子、智慧家庭與人車家生態整合。",note:"比較時需看裝置支援範圍、地區版本、端側隱私與雲端依賴程度。",tags:["端側 AI","消費電子","智慧家庭"],leaders:"雷軍（創辦人、董事長暨 CEO）；AI 團隊與模型負責人以官方公告為準。",edge:"手機、IoT 家電、車載與智慧家庭裝置構成大量終端，具備端側 AI 與跨裝置整合場景。",tech:"端側模型、手機 AI 功能、語音／視覺感知、裝置互聯與智慧家庭系統。",business:"智慧手機、智慧家庭產品、穿戴裝置、車載生態與 AI 功能加值。",usecase:"裝置語音助理、照片與文件處理、智慧家電控制、車載互動。",source:"https://www.mi.com/global/"},
+{id:"minimax",n:"MiniMax",icon:"◉",g:"china",x:74,y:65,focus:"語音、影音與互動式 AI",products:"MiniMax 語言、語音與多模態產品線；海螺相關產品",summary:"以多模態與內容生成為重要方向，適合從語音、影音及互動產品觀察其布局。",direction:"語音生成、影音生成、對話模型與多模態互動。",note:"留意輸出品質、生成時間、商用條款與不同產品的功能界線。",tags:["語音","影音生成","多模態"],leaders:"閆俊傑（創辦人暨代表人物；現任職務以公司公告為準）。",edge:"聚焦多模態生成與互動式產品，語音及影音生成是觀察其技術定位的重要方向。",tech:"語言模型、語音生成、影音生成、多模態互動與面向開發者的服務。",business:"消費者 AI 產品、語音／影音生成服務及模型 API。",usecase:"配音、語音客服、影音內容製作、互動角色與多媒體原型。",source:"https://www.minimaxi.com/"},
+{id:"deepseek",n:"DeepSeek",icon:"◉",g:"china",x:85,y:55,focus:"推理、效率與開放模型",products:"DeepSeek 系列模型",summary:"以模型效率與推理能力受到廣泛關注，並影響開發者對模型成本與部署方式的比較。",direction:"通用語言模型、推理能力、模型效率與開放模型生態。",note:"比較不同版本時，確認模型日期、基準測試方法、部署規格與授權內容。",tags:["推理","模型效率","開放生態"],leaders:"梁文鋒（創辦人）；研究與產品團隊資訊以官方發布為準。",edge:"以模型效率、推理能力與可供開發者使用的模型而受到關注，適合比較部署成本與性能。",tech:"DeepSeek 系列語言模型、推理訓練、模型效率優化與開放模型發布。",business:"模型服務與 API、生態合作；不同模型的授權與商用條款需逐項確認。",usecase:"程式開發、數學與邏輯推理、文件摘要、中文問答及自架模型實驗。",source:"https://www.deepseek.com/"},
+{id:"mistral",n:"Mistral AI",icon:"M",g:"other",x:22,y:84,focus:"高效率模型與開放生態",products:"Mistral、Mixtral、Le Chat 等產品線",summary:"以模型效率、部署彈性與開放生態作為重要發展方向，服務開發者與企業客戶。",direction:"語言模型、開放權重模型、企業部署與模型服務。",note:"比較授權方式、硬體需求、部署選項與特定語言的表現。",tags:["歐洲 AI","開放權重","企業部署"],leaders:"Arthur Mensch（亞瑟・孟什）（共同創辦人暨 CEO）；Guillaume Lample（紀堯姆・朗普爾）（共同創辦人、首席科學方向）；Timothée Lacroix（蒂莫泰・拉克魯瓦）（共同創辦人、CTO）。",edge:"歐洲代表性 AI 公司之一，強調模型選擇、部署控制、效率與企業／政府應用。",tech:"Mistral 模型、開放權重模型、OCR、語音、程式工具與企業模型平台。",business:"模型 API、企業部署、開發工具、私有化方案與雲端／本地算力服務。",usecase:"企業內部模型、文件 OCR、程式開發、多語言助理與受監管產業應用。",source:"https://mistral.ai/about/"},
+{id:"cohere",n:"Cohere",icon:"C",g:"other",x:36,y:88,focus:"企業搜尋、檢索與語言模型",products:"Command；Embed；Rerank 等產品線",summary:"聚焦企業資料與知識工作，適合從搜尋、問答與內部知識系統等場景理解其定位。",direction:"企業級語言模型、向量嵌入、重排序與檢索增強生成（RAG）。",note:"評估企業搜尋時，需看檢索品質、權限隔離、資料部署與評測方法。",tags:["企業搜尋","RAG","資料檢索"],leaders:"Aidan Gomez（艾丹・戈梅茲）（共同創辦人暨 CEO）；Nick Frosst（尼克・弗羅斯特）、Ivan Zhang（張一凡）（共同創辦人）。",edge:"與通用消費型聊天機器人相比，更聚焦企業搜尋、資料檢索與安全的知識工作流程。",tech:"Command 模型、Embed 向量嵌入、Rerank 重排序、RAG 與 North 企業代理平台。",business:"企業 AI 平台、模型 API、搜尋／檢索服務及企業級部署。",usecase:"公司內部搜尋、文件問答、客服知識庫、合約檢索與企業流程代理。",source:"https://cohere.com/about"},
+{id:"thinking",n:"Thinking Machines Lab",icon:"N",g:"other",x:54,y:88,focus:"可調整、可協作的 AI 系統",products:"研究與產品方向持續發展，請以官方公告為準",summary:"由具大型 AI 研究與產品經驗的團隊成立，外界應以正式公開資訊理解其產品進度。",direction:"聚焦 AI 系統研究、模型能力與人機協作方向。",note:"新創公司的產品與策略變動較快，應優先查證官方發布，不宜把推測當成既定產品。",tags:["AI 研究","新創","人機協作"],leaders:"Mira Murati（米拉・穆拉蒂）（創辦人）；其他領導與團隊資訊應以公司最新官方公告為準。",edge:"由具大型 AI 研究與產品經驗的人才創立，方向及產品形態仍需以公開發布為依據。",tech:"聚焦前沿模型與人機協作研究；具體技術、產品與可用性應逐項查證。",business:"商業模式與產品化路線仍在發展，避免把外界推測當成已確認的產品。",usecase:"作為追蹤前沿研究、人才流動與新型 AI 產品方向的觀察對象。",source:"https://thinkingmachines.ai/"},
+{id:"sakana",n:"Sakana AI",icon:"🐡",g:"other",x:70,y:85,focus:"受自然與演化啟發的模型方法",products:"研究型模型與 AI 系統；具體產品以官方公告為準",summary:"以受自然系統啟發的研究思路建立差異化，屬於值得追蹤的日本 AI 研究團隊。",direction:"探索模型組合、演化式方法與高效率 AI 研究路線。",note:"閱讀研究成果時，區分論文實驗、公開模型與可商用產品。",tags:["日本 AI","模型研究","演化方法"],leaders:"David Ha（大衛・哈）（共同創辦人暨 CEO）；Llion Jones（利昂・瓊斯）（共同創辦人暨 CTO）；Ren Ito（伊藤錬）（共同創辦人、董事長）。",edge:"研究思路受自然、群體智慧與演化啟發，探索不同於單純擴大模型規模的 AI 方法。",tech:"AI Scientist、自動化研究流程、多代理協作、模型組合與演化式方法。",business:"前沿研究、與企業及公共部門合作的 AI 解決方案。",usecase:"研究工作自動化、模型實驗、科學輔助及日本企業／公共部門 AI 導入。",source:"https://sakana.ai/company-info/"},
+{id:"stability",n:"Stability AI",icon:"✺",g:"other",x:86,y:83,focus:"生成式影像、影音與創作工具",products:"Stable Diffusion 系列及相關生成模型",summary:"以生成式影像模型聞名，常被用於理解開放模型如何推動創作者與開發者生態。",direction:"生成式影像與媒體模型、創作者工具及模型生態。",note:"確認模型授權、使用限制、商業用途與各版本的實際維護狀態。",tags:["影像生成","創作者工具","模型授權"],leaders:"Emad Mostaque（埃馬德・穆斯塔克） 為早期創辦人之一；Prem Akkaraju（普雷姆・阿卡拉朱） 為公司 CEO，Sean Parker（西恩・帕克） 為執行董事長（依公司公開頁面）。",edge:"以 Stable Diffusion 等生成式影像模型在開放創作與開發者生態中建立知名度。",tech:"文字生成影像、影像編輯與生成模型；不同模型的開放程度與授權條款並不相同。",business:"創作工具、模型授權／服務與企業媒體工作流程。",usecase:"概念設計、廣告素材、遊戲美術、視覺原型與創作者工作流程。",source:"https://stability.ai/board-of-directors"},
+{id:"nvidia",n:"NVIDIA",icon:"▰",g:"west",x:48,y:77,focus:"AI 算力、GPU 與完整運算平台",products:"GPU 加速運算；CUDA；NVIDIA AI Enterprise；DGX／Grace Blackwell 等平台（依產品世代更新）",summary:"NVIDIA 不只是晶片供應商，也提供 GPU、互連網路、系統、軟體與開發工具，構成 AI 訓練和推論的重要基礎設施。",direction:"GPU 加速運算、CUDA 軟體生態、資料中心系統、網路互連、推論部署與機器人平台。",note:"評估 AI 基礎設施時，除了 GPU 規格，也要比較記憶體、互連、功耗、供應、軟體相容性與整體成本。",tags:["GPU","CUDA","AI 基礎設施"],leaders:"黃仁勳（共同創辦人、總裁暨執行長）。",edge:"硬體、系統、網路與 CUDA 軟體生態相互配合，形成較高的開發與部署轉換成本。",tech:"GPU 平行運算、CUDA、AI 訓練／推論平台、高速互連，以及機器人與邊緣運算相關工具。",business:"資料中心 GPU 與系統、網路產品、企業軟體、開發平台及專業視覺化產品。",usecase:"大型模型訓練、AI 推論伺服器、工業視覺、數位孿生、機器人與邊緣 AI。",source:"https://www.nvidia.com/en-us/about-nvidia/"}
+];
+let activeGroup="all",selected="openai";
+const nodeRoot=document.getElementById("nodes"),search=document.getElementById("search");
+function filtered(){let q=search.value.trim().toLowerCase();return data.filter(c=>(activeGroup==="all"||c.g===activeGroup)&&[c.n,c.focus,c.products,c.direction,c.tags.join(" ")].join(" ").toLowerCase().includes(q))}
+function render(){
+ nodeRoot.replaceChildren();let items=filtered();document.getElementById("visibleCount").textContent=items.length;
+ items.forEach(c=>{let b=document.createElement("button");b.type="button";b.className="node "+c.g;b.style.left=c.x+"%";b.style.top=c.y+"%";b.dataset.id=c.id;b.setAttribute("aria-pressed",String(c.id===selected));b.setAttribute("aria-label","查看"+c.n+"企業資料");
+ let orb=document.createElement("span");orb.className="orb";orb.textContent=c.icon;let name=document.createElement("span");name.className="name";name.textContent=c.n;let mini=document.createElement("span");mini.className="mini";mini.textContent=c.g==="west"?"WEST":c.g==="china"?"EAST":"GLOBAL";
+ b.append(orb,name,mini);b.addEventListener("click",()=>select(c.id));nodeRoot.appendChild(b)});
+ if(!items.length){let msg=document.createElement("div");msg.style.cssText="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#b6c6df;background:#0a1424dd;padding:16px;border:1px solid #53647e;border-radius:10px";msg.textContent="沒有符合條件的企業，請調整搜尋或分類。";nodeRoot.appendChild(msg)}
+}
+function select(id){let c=data.find(x=>x.id===id);if(!c)return;selected=id;document.getElementById("dIcon").textContent=c.icon;document.getElementById("dCategory").textContent=c.g==="west"?"WESTERN REALM · 美國／西方":c.g==="china"?"EASTERN REALM · 中國勢力":"GLOBAL ECOSYSTEM · 其他地區";document.getElementById("dName").textContent=c.n+" 帝國";document.getElementById("dFocus").textContent=c.focus;document.getElementById("dSummary").textContent=c.summary;document.getElementById("dProducts").textContent=c.products;document.getElementById("dDirection").textContent=c.direction;document.getElementById("dNote").textContent=c.note;
+document.getElementById("dLeaders").textContent=c.leaders||"尚待官方資料確認";
+document.getElementById("dTech").textContent=c.tech||c.direction;
+document.getElementById("dEdge").textContent=c.edge||c.focus;
+document.getElementById("dBusiness").textContent=c.business||"商業模式依產品與市場公告確認";
+document.getElementById("dUsecase").textContent=c.usecase||"請依實際產品能力與授權評估";
+let source=document.getElementById("dSource");source.href=c.source||"#";source.textContent=c.source||"尚無已確認官方來源";
+let tags=document.getElementById("dTags");tags.replaceChildren();c.tags.forEach(t=>{let e=document.createElement("span");e.className="tag";e.textContent=t;tags.appendChild(e)});render()}
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{activeGroup=b.dataset.group;document.querySelectorAll(".filter").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render()}));
+search.addEventListener("input",render);
+document.getElementById("reset").addEventListener("click",()=>{activeGroup="all";search.value="";document.querySelectorAll(".filter").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.group==="all")));select("openai")});
+document.getElementById("copySummary").addEventListener("click",async()=>{let c=data.find(x=>x.id===selected);let text=`${c.n} 帝國\n定位：${c.focus}\n代表產品／模型：${c.products}\n核心方向：${c.direction}\n戰略觀察：${c.note}`;try{await navigator.clipboard.writeText(text)}catch{let t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}let toast=document.getElementById("toast");toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1500)});
+render();select(selected);
+</script>
+</body>
+</html>
